@@ -118,7 +118,7 @@ php spark serve
 Application URL:
 
 ```text
-http://localhost:8080
+http://localhost:8080/index.php/login
 ```
 
 ## Future Enhancements

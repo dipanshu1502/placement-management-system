@@ -55,6 +55,11 @@ $routes->get(
     'Admin\Student::view/$1'
 );
 
+$routes->get(
+    'admin/students/delete/(:num)',
+    'Admin\Student::delete/$1'
+);
+
 // Companies
 
 $routes->get('admin/companies', 'Admin\Company::index');
