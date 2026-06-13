@@ -7,139 +7,98 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->get('/', 'Home::index');
 
+// Auth Routes
 $routes->get('/login', 'Auth::login');
+$routes->post('/check-login', 'Auth::checkLogin');
 
-$routes->post('/check-login','Auth::checkLogin');
+$routes->get('/register', 'Auth::register');
+$routes->post('/save-register', 'Auth::saveRegister');
 
-$routes->get('/register','Auth::register');
+$routes->get('/logout', 'Auth::logout');
 
-$routes->post('/save-register','Auth::saveRegister');
+$routes->get('forgot-password', 'Auth::forgotPassword');
+$routes->post('send-reset-link', 'Auth::sendResetLink');
 
-$routes->get('/logout','Auth::logout');
-
-$routes->get('/admin/dashboard', 'Admin\Dashboard::index');
-
-$routes->get('/student/dashboard', 'Student\Dashboard::index');
-
-// Department Management
-
-$routes->get('admin/departments', 'Admin\Department::index');
-$routes->get('admin/departments/create', 'Admin\Department::create');
-$routes->post('admin/departments/store', 'Admin\Department::store');
-
-$routes->get('admin/departments/edit/(:num)', 'Admin\Department::edit/$1');
-$routes->post('admin/departments/update/(:num)', 'Admin\Department::update/$1');
-
-$routes->get('admin/departments/delete/(:num)', 'Admin\Department::delete/$1');
-
-// Student Profile Routes
-$routes->get(
-    'student/profile',
-    'Student\Profile::index'
-);
-
-$routes->post(
-    'student/profile/save',
-    'Student\Profile::save'
-);
-
-// Students Management
-
-$routes->get(
-    'admin/students',
-    'Admin\Student::index'
-);
-
-$routes->get(
-    'admin/students/view/(:num)',
-    'Admin\Student::view/$1'
-);
-
-$routes->get(
-    'admin/students/delete/(:num)',
-    'Admin\Student::delete/$1'
-);
-
-// Companies
-
-$routes->get('admin/companies', 'Admin\Company::index');
-$routes->get('admin/companies/create', 'Admin\Company::create');
-$routes->post('admin/companies/store', 'Admin\Company::store');
-
-$routes->get('admin/companies/edit/(:num)', 'Admin\Company::edit/$1');
-$routes->post('admin/companies/update/(:num)', 'Admin\Company::update/$1');
-
-$routes->get('admin/companies/delete/(:num)', 'Admin\Company::delete/$1');
-
-// Placement Drives
-$routes->get('admin/drives', 'Admin\PlacementDrive::index');
-$routes->get('admin/drives/create', 'Admin\PlacementDrive::create');
-$routes->post('admin/drives/store', 'Admin\PlacementDrive::store');
-$routes->get('admin/drives/delete/(:num)', 'Admin\PlacementDrive::delete/$1');
-
-// Student Drive Routes
-$routes->get(
-    'student/drives',
-    'Student\Drive::index'
-);
-
-$routes->get(
-    'student/drives/apply/(:num)',
-    'Student\Drive::apply/$1'
-);
-
-// Student Application Routes
-$routes->get(
-    'student/applications',
-    'Student\Application::index'
-);
+$routes->get('reset-password/(:any)', 'Auth::resetPassword/$1');
+$routes->post('update-password', 'Auth::updatePassword');
 
 
-// Admin Application Routes
-$routes->get(
-    'admin/applications',
-    'Admin\Application::index'
-);
+// =========================
+// ADMIN ROUTES
+// =========================
 
-$routes->post(
-    'admin/applications/update-status/(:num)',
-    'Admin\Application::updateStatus/$1'
-);
+$routes->group('admin', ['filter' => 'admin'], function ($routes) {
 
-// Student Resume Routes
-$routes->get('student/resume', 'Student\Resume::index');
-$routes->post('student/resume/upload', 'Student\Resume::upload');
+    $routes->get('dashboard', 'Admin\Dashboard::index');
 
-// Admin Resume Routes
-$routes->get('admin/resumes', 'Admin\Resume::index');
+    // Departments
+    $routes->get('departments', 'Admin\Department::index');
+    $routes->get('departments/create', 'Admin\Department::create');
+    $routes->post('departments/store', 'Admin\Department::store');
+    $routes->get('departments/edit/(:num)', 'Admin\Department::edit/$1');
+    $routes->post('departments/update/(:num)', 'Admin\Department::update/$1');
+    $routes->get('departments/delete/(:num)', 'Admin\Department::delete/$1');
 
-// Student Notification Routes
-$routes->get('student/notifications', 'Student\Notification::index');
+    // Students
+    $routes->get('students', 'Admin\Student::index');
+    $routes->get('students/view/(:num)', 'Admin\Student::view/$1');
+    $routes->get('students/delete/(:num)', 'Admin\Student::delete/$1');
 
-// Admin Download Routes
-$routes->get(
-    'admin/drives/export-applicants/(:num)',
-    'Admin\PlacementDrive::exportApplicants/$1'
-);
+    // Companies
+    $routes->get('companies', 'Admin\Company::index');
+    $routes->get('companies/create', 'Admin\Company::create');
+    $routes->post('companies/store', 'Admin\Company::store');
+    $routes->get('companies/edit/(:num)', 'Admin\Company::edit/$1');
+    $routes->post('companies/update/(:num)', 'Admin\Company::update/$1');
+    $routes->get('companies/delete/(:num)', 'Admin\Company::delete/$1');
 
-// Forgot Password Routes
-$routes->get(
-    'forgot-password',
-    'Auth::forgotPassword'
-);
+    // Placement Drives
+    $routes->get('drives', 'Admin\PlacementDrive::index');
+    $routes->get('drives/create', 'Admin\PlacementDrive::create');
+    $routes->post('drives/store', 'Admin\PlacementDrive::store');
+    $routes->get('drives/delete/(:num)', 'Admin\PlacementDrive::delete/$1');
 
-$routes->post(
-    'send-reset-link',
-    'Auth::sendResetLink'
-);
+    // Applications
+    $routes->get('applications', 'Admin\Application::index');
+    $routes->post(
+        'applications/update-status/(:num)',
+        'Admin\Application::updateStatus/$1'
+    );
 
-// Reset Password Routes
-$routes->get(
-    'reset-password/(:any)',
-    'Auth::resetPassword/$1'
-);
+    // Resume Management
+    $routes->get('resumes', 'Admin\Resume::index');
 
-$routes->post(
-    'update-password',
-    'Auth::updatePassword'
-);
+    // CSV Export
+    $routes->get(
+        'drives/export-applicants/(:num)',
+        'Admin\PlacementDrive::exportApplicants/$1'
+    );
+});
+
+
+// =========================
+// STUDENT ROUTES
+// =========================
+
+$routes->group('student', ['filter' => 'student'], function ($routes) {
+
+    $routes->get('dashboard', 'Student\Dashboard::index');
+
+    // Profile
+    $routes->get('profile', 'Student\Profile::index');
+    $routes->post('profile/save', 'Student\Profile::save');
+
+    // Drives
+    $routes->get('drives', 'Student\Drive::index');
+    $routes->get('drives/apply/(:num)', 'Student\Drive::apply/$1');
+
+    // Applications
+    $routes->get('applications', 'Student\Application::index');
+
+    // Resume
+    $routes->get('resume', 'Student\Resume::index');
+    $routes->post('resume/upload', 'Student\Resume::upload');
+
+    // Notifications
+    $routes->get('notifications', 'Student\Notification::index');
+});
