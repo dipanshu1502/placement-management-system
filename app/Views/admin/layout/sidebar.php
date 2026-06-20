@@ -15,6 +15,7 @@ $currentUrl = current_url();
         padding: 25px 0;
         box-shadow: 0 0 25px rgba(0, 0, 0, .20);
         z-index: 999;
+        transition: all .3s ease;
     }
 
     .sidebar-title {
@@ -49,8 +50,14 @@ $currentUrl = current_url();
     }
 
     @media (max-width: 768px) {
+
         .sidebar {
-            width: 220px;
+            left: -280px;
+            width: 260px;
+        }
+
+        .sidebar.show {
+            left: 0;
         }
 
         .sidebar-title {
@@ -59,7 +66,7 @@ $currentUrl = current_url();
     }
 </style>
 
-<div class="sidebar">
+<div class="sidebar" id="adminSidebar">
 
     <h3 class="sidebar-title">🛠 PMS Admin</h3>
 
