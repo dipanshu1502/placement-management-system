@@ -23,10 +23,11 @@ if ($student) {
 }
 
 $currentUrl = current_url();
+
 ?>
 
 <style>
-    .sidebar {
+    .student-sidebar {
         width: 260px;
         min-height: 100vh;
         background: linear-gradient(180deg, #4f46e5, #7c3aed);
@@ -36,9 +37,10 @@ $currentUrl = current_url();
         padding: 25px 0;
         box-shadow: 0 0 25px rgba(0, 0, 0, .15);
         z-index: 999;
+        transition: all .3s ease;
     }
 
-    .sidebar-title {
+    .student-sidebar-title {
         color: #fff;
         text-align: center;
         margin-bottom: 35px;
@@ -47,7 +49,7 @@ $currentUrl = current_url();
         white-space: nowrap;
     }
 
-    .sidebar a {
+    .student-sidebar a {
         display: block;
         color: #fff;
         text-decoration: none;
@@ -59,35 +61,41 @@ $currentUrl = current_url();
         font-weight: 500;
     }
 
-    .sidebar a:hover {
+    .student-sidebar a:hover {
         background: rgba(255, 255, 255, 0.15);
         transform: translateX(5px);
     }
 
-    .sidebar a.active {
+    .student-sidebar a.active {
         background: rgba(255, 255, 255, 0.20);
         border-left: 4px solid #fff;
     }
 
-    .sidebar .badge {
+    .student-sidebar .badge {
         float: right;
         margin-top: 2px;
     }
 
     @media (max-width: 768px) {
-        .sidebar {
-            width: 220px;
+
+        .student-sidebar {
+            left: -280px;
+            width: 260px;
         }
 
-        .sidebar-title {
+        .student-sidebar.show {
+            left: 0;
+        }
+
+        .student-sidebar-title {
             font-size: 20px;
         }
     }
 </style>
 
-<div class="sidebar">
+<div class="student-sidebar" id="studentSidebar">
 
-    <h3 class="sidebar-title">🎓 Student Panel</h3>
+    <h3 class="student-sidebar-title">🎓 Student Panel</h3>
 
     <a href="<?= base_url('student/dashboard') ?>"
         class="<?= strpos($currentUrl, 'student/dashboard') !== false ? 'active' : '' ?>">
@@ -130,3 +138,19 @@ $currentUrl = current_url();
     </a>
 
 </div>
+
+<script>
+    function toggleStudentSidebar() {
+
+        const sidebar = document.getElementById('studentSidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+
+        if (sidebar) {
+            sidebar.classList.toggle('show');
+        }
+
+        if (overlay) {
+            overlay.classList.toggle('show');
+        }
+    }
+</script>

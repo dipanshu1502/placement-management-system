@@ -140,3 +140,8 @@ B.Tech Student | Akal University
 ## License
 
 This project is developed for educational and academic purposes.
+
+
+
+#run in phone
+php spark serve --host 0.0.0.0 --port 8080

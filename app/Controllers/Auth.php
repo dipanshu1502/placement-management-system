@@ -47,7 +47,8 @@ class Auth extends BaseController
                 $password,
                 PASSWORD_DEFAULT
             ),
-            'role'     => 'student'
+            'role'     => 'student',
+            'status'   => 'active'
         ];
 
         $userModel->insert($userData);
@@ -66,36 +67,52 @@ class Auth extends BaseController
     }
 
     public function checkLogin()
-    {
-        $userModel = new UserModel();
+{
+    $userModel = new UserModel();
 
-        $email = trim($this->request->getPost('email'));
-        $password = $this->request->getPost('password');
+    $email = trim($this->request->getPost('email'));
+    $password = $this->request->getPost('password');
 
-        $user = $userModel
-            ->where('email', $email)
-            ->first();
+    $user = $userModel
+        ->where('email', $email)
+        ->first();
 
-        if ($user && password_verify($password, $user['password'])) {
-            session()->set([
-                'id'        => $user['id'],
-                'name'      => $user['name'],
-                'role'      => $user['role'],
-                'logged_in' => true
-            ]);
+    if ($user && password_verify($password, $user['password'])) {
 
-            if ($user['role'] == 'admin') {
-                return redirect()->to('/admin/dashboard');
-            }
-
-            return redirect()->to('/student/dashboard');
+        // Block Removed Student
+        if (
+            $user['role'] === 'student' &&
+            isset($user['status']) &&
+            $user['status'] === 'inactive'
+        ) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with(
+                    'error',
+                    'Your account has been removed by the administrator. Please contact the administrator.'
+                );
         }
 
-        return redirect()
-            ->back()
-            ->withInput()
-            ->with('error', 'Invalid email or password.');
+        session()->set([
+            'id'        => $user['id'],
+            'name'      => $user['name'],
+            'role'      => $user['role'],
+            'logged_in' => true
+        ]);
+
+        if ($user['role'] == 'admin') {
+            return redirect()->to('/admin/dashboard');
+        }
+
+        return redirect()->to('/student/dashboard');
     }
+
+    return redirect()
+        ->back()
+        ->withInput()
+        ->with('error', 'Invalid email or password.');
+}
 
     public function forgotPassword()
     {

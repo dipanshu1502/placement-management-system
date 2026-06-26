@@ -14,7 +14,8 @@ class UserModel extends Model
         'name',
         'email',
         'password',
-        'role'
+        'role',
+        'status'
     ];
 
     protected $returnType = 'array';

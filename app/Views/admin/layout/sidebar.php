@@ -81,8 +81,13 @@ $currentUrl = current_url();
     </a>
 
     <a href="<?= base_url('admin/students') ?>"
-        class="<?= strpos($currentUrl, 'admin/students') !== false ? 'active' : '' ?>">
+        class="<?= (strpos($currentUrl, 'admin/students') !== false && strpos($currentUrl, 'admin/removed-students') === false) ? 'active' : '' ?>">
         👨‍🎓 Students
+    </a>
+
+    <a href="<?= base_url('admin/removed-students') ?>"
+        class="<?= strpos($currentUrl, 'admin/removed-students') !== false ? 'active' : '' ?>">
+        🗑️ Removed Students
     </a>
 
     <a href="<?= base_url('admin/companies') ?>"

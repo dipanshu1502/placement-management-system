@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 11, 2026 at 08:35 AM
+-- Generation Time: Jun 24, 2026 at 06:47 AM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.1.25
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -41,7 +41,6 @@ CREATE TABLE `applications` (
 
 INSERT INTO `applications` (`id`, `student_id`, `drive_id`, `status`, `applied_at`) VALUES
 (3, 1, 8, 'Applied', '2026-06-11 04:05:58'),
-(4, 2, 10, 'Applied', '2026-06-11 04:16:45'),
 (5, 1, 10, 'Selected', '2026-06-11 04:17:35');
 
 -- --------------------------------------------------------
@@ -113,19 +112,12 @@ INSERT INTO `notifications` (`id`, `student_id`, `title`, `message`, `is_read`, 
 (4, 1, 'Congratulations!', 'You have been selected for Software Develpoer at Google.', 1, '2026-06-10 10:13:24'),
 (5, 1, 'New Placement Drive', 'Microsoft has opened applications for Data Scientist.', 1, '2026-06-10 10:52:15'),
 (6, 1, 'New Placement Drive', 'Microsoft has opened applications for Data Scientist.', 1, '2026-06-10 10:55:14'),
-(7, 2, 'New Placement Drive', 'Microsoft has opened applications for Data Scientist.', 1, '2026-06-10 10:55:14'),
 (8, 1, 'New Placement Drive', 'Google has opened applications for xxy.', 1, '2026-06-11 03:48:52'),
-(9, 2, 'New Placement Drive', 'Google has opened applications for xxy.', 0, '2026-06-11 03:48:52'),
 (10, 1, 'New Placement Drive', 'Google has opened applications for Software Develpoer.', 1, '2026-06-11 03:55:58'),
-(11, 2, 'New Placement Drive', 'Google has opened applications for Software Develpoer.', 0, '2026-06-11 03:55:58'),
 (12, 1, 'New Placement Drive', 'Google has opened applications for Software Develpoer.', 1, '2026-06-11 03:56:24'),
-(13, 2, 'New Placement Drive', 'Google has opened applications for Software Develpoer.', 0, '2026-06-11 03:56:24'),
 (14, 1, 'Application Submitted', 'You have successfully applied for Software Develpoer at Google.', 1, '2026-06-11 04:05:58'),
 (15, 1, 'New Placement Drive', 'Microsoft has opened applications for Data Scientist.', 1, '2026-06-11 04:15:11'),
-(16, 2, 'New Placement Drive', 'Microsoft has opened applications for Data Scientist.', 0, '2026-06-11 04:15:11'),
 (17, 1, 'New Placement Drive', 'Microsoft has opened applications for Data Scientist.', 1, '2026-06-11 04:15:51'),
-(18, 2, 'New Placement Drive', 'Microsoft has opened applications for Data Scientist.', 0, '2026-06-11 04:15:51'),
-(19, 2, 'Application Submitted', 'You have successfully applied for Data Scientist at Microsoft.', 0, '2026-06-11 04:16:45'),
 (20, 1, 'Application Submitted', 'You have successfully applied for Data Scientist at Microsoft.', 1, '2026-06-11 04:17:35'),
 (21, 1, 'Congratulations!', 'You have been selected for Data Scientist at Microsoft.', 1, '2026-06-11 04:19:19');
 
@@ -141,6 +133,13 @@ CREATE TABLE `password_resets` (
   `token` varchar(255) NOT NULL,
   `created_at` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `password_resets`
+--
+
+INSERT INTO `password_resets` (`id`, `email`, `token`, `created_at`) VALUES
+(7, 'student2@gmail.com', 'e1fe5e576cb79b9cab374e9b459bc77b346849be4492e6693864f776e163df6e', '2026-06-11 10:26:29');
 
 -- --------------------------------------------------------
 
@@ -186,8 +185,7 @@ CREATE TABLE `resumes` (
 --
 
 INSERT INTO `resumes` (`id`, `student_id`, `resume_file`, `uploaded_at`) VALUES
-(1, 1, '1781082603_1781082603_1bb319bc9c103de42680.pdf', '2026-06-10 08:53:50'),
-(2, 2, '1781151400_1781151400_0c8a80d73549ed9f8537.pdf', '2026-06-11 04:16:40');
+(1, 1, '1782107182_1782107182_fafc54deb8f0fdedc129.pdf', '2026-06-10 08:53:50');
 
 -- --------------------------------------------------------
 
@@ -212,8 +210,9 @@ CREATE TABLE `students` (
 --
 
 INSERT INTO `students` (`id`, `user_id`, `department_id`, `roll_no`, `phone`, `cgpa`, `backlogs`, `passing_year`, `created_at`) VALUES
-(1, 1, 1, '237106008', '9756938892', 9.00, 0, '2027', '2026-06-10 06:13:16'),
-(2, 4, 1, '2306001', '1234567890', 8.50, 0, '2027', '2026-06-10 10:53:59');
+(1, 1, 1, '237106008', NULL, NULL, NULL, NULL, '2026-06-10 06:13:16'),
+(4, 11, 1, '237106021', '8968391105', 0.00, 0, '2027', '2026-06-12 18:27:29'),
+(5, 10, 1, '237106020', '9518137105', 8.95, 0, '2027', '2026-06-12 18:28:36');
 
 -- --------------------------------------------------------
 
@@ -237,8 +236,9 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`, `created_at`) VALUES
 (1, 'Dipanshu', 'dipanshu150206@gmail.com', '$2y$10$B5ZKBq5lUBysGySu6/wQpOFuydvZ..ud1KU7gphhgD3SLkUnQ7CzC', 'student', '2026-06-10 04:24:35'),
 (3, 'Admin', 'admin@gmail.com', '$2y$10$PJVM/FCVpb34LZbDWMXh..qxnpaf1UBD.PoCBY8CxHRBW.e4AfrMa', 'admin', '2026-06-10 04:39:42'),
-(4, 'Student', 'student@gmail.com', '$2y$10$vA7/uTUfcIJ/FC.2TaKvRORSx3Y4qlktdYGp9IB65I5bzu5RnABd6', 'student', '2026-06-10 09:57:41'),
-(5, 'Student 1', 'student1@gmail.com', '$2y$10$cXoTO8ef7OdqfvaKWD7cs.B7pX2.zzDZmkme9Noxwb/G5BjOAk/B2', 'student', '2026-06-10 12:10:23');
+(7, 'Deepa', 'deepansh305@gmail.com', '$2y$10$fpLLNt6psjKFH5Q2ZjewXO8N8u6XYe2IDh1RNjz8kMAp5gGANjvl6', 'student', '2026-06-11 08:50:34'),
+(10, 'Jasdeep kaur', 'jasdeepj004@gmail.com', '$2y$10$oIPSYcXt83kwpxQ0pCewau8VCQXSTz2OJVML5DGafUP5nM8cOLFIW', 'student', '2026-06-12 18:21:52'),
+(11, 'Jashandeep Kaur', 'jashancheema644@gmail.com', '$2y$10$a/OdVepUMKAiopVffddP9udfHK5e5cwkgB5P7ZB6lHn.NshFB3k1S', 'student', '2026-06-12 18:24:31');
 
 --
 -- Indexes for dumped tables
@@ -315,7 +315,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `applications`
 --
 ALTER TABLE `applications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `companies`
@@ -333,13 +333,13 @@ ALTER TABLE `departments`
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `password_resets`
 --
 ALTER TABLE `password_resets`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `placement_drives`
@@ -351,19 +351,19 @@ ALTER TABLE `placement_drives`
 -- AUTO_INCREMENT for table `resumes`
 --
 ALTER TABLE `resumes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `students`
 --
 ALTER TABLE `students`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- Constraints for dumped tables

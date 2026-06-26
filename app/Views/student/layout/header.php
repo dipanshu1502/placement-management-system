@@ -47,6 +47,7 @@
             padding: 10px 14px;
             border-radius: 10px;
             font-size: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,.2);
         }
 
         .sidebar-overlay {
@@ -56,7 +57,7 @@
         @media (max-width: 768px) {
 
             .main {
-                margin-left: 0;
+                margin-left: 0 !important;
                 padding: 70px 15px 15px;
             }
 

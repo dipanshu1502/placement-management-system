@@ -15,6 +15,7 @@ $routes->get('/register', 'Auth::register');
 $routes->post('/save-register', 'Auth::saveRegister');
 
 $routes->get('/logout', 'Auth::logout');
+$routes->get('drives', 'Api\PlacementDriveController::index');
 
 $routes->get('forgot-password', 'Auth::forgotPassword');
 $routes->post('send-reset-link', 'Auth::sendResetLink');
@@ -40,10 +41,14 @@ $routes->group('admin', ['filter' => 'admin'], function ($routes) {
     $routes->get('departments/delete/(:num)', 'Admin\Department::delete/$1');
 
     // Students
-    $routes->get('students', 'Admin\Student::index');
-    $routes->get('students/view/(:num)', 'Admin\Student::view/$1');
-    $routes->get('students/delete/(:num)', 'Admin\Student::delete/$1');
+    // Students
+$routes->get('students', 'Admin\Student::index');
+$routes->get('students/view/(:num)', 'Admin\Student::view/$1');
+$routes->get('students/delete/(:num)', 'Admin\Student::delete/$1');
 
+// Removed Students
+$routes->get('removed-students', 'Admin\Student::removedStudents');
+$routes->get('restore-student/(:num)', 'Admin\Student::restoreStudent/$1');
     // Companies
     $routes->get('companies', 'Admin\Company::index');
     $routes->get('companies/create', 'Admin\Company::create');
@@ -101,4 +106,79 @@ $routes->group('student', ['filter' => 'student'], function ($routes) {
 
     // Notifications
     $routes->get('notifications', 'Student\Notification::index');
+});
+
+// =========================
+// API ROUTES
+// =========================
+
+$routes->group('api', function ($routes) {
+
+    // Authentication
+    $routes->post(
+        'login',
+        'Api\AuthController::login'
+    );
+
+    // Student
+    $routes->get(
+        'student/profile/(:num)',
+        'Api\StudentController::profile/$1'
+    );
+
+    $routes->post(
+        'student/update-profile',
+        'Api\StudentController::updateProfile'
+    );
+
+    // Companies
+    $routes->get(
+        'companies',
+        'Api\CompanyController::index'
+    );
+
+    $routes->get(
+        'company/(:num)',
+        'Api\CompanyController::show/$1'
+    );
+
+    // Placement Drives
+    $routes->get(
+        'drives',
+        'Api\PlacementDriveController::index'
+    );
+
+    $routes->get(
+        'drive/(:num)',
+        'Api\PlacementDriveController::show/$1'
+    );
+
+    // Applications
+    $routes->post(
+        'apply',
+        'Api\ApplicationController::apply'
+    );
+
+    $routes->get(
+        'my-applications/(:num)',
+        'Api\ApplicationController::myApplications/$1'
+    );
+
+    // Dashboard
+    $routes->get(
+        'dashboard-stats/(:num)',
+        'Api\DashboardController::stats/$1'
+    );
+
+    // Resume
+    $routes->post(
+        'upload-resume',
+        'Api\ResumeController::upload'
+    );
+
+    $routes->get(
+        'resume/(:num)',
+        'Api\ResumeController::getResume/$1'
+    );
+
 });
