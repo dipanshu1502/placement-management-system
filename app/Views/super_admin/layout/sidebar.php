@@ -168,3 +168,25 @@ $currentUrl = current_url();
     </a>
 
 </div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const sidebar = document.getElementById("superAdminSidebar");
+
+    // Restore scroll position
+    const scrollPosition = localStorage.getItem("superAdminSidebarScroll");
+
+    if (scrollPosition !== null) {
+        sidebar.scrollTop = scrollPosition;
+    }
+
+    // Save scroll position
+    sidebar.addEventListener("scroll", function () {
+        localStorage.setItem(
+            "superAdminSidebarScroll",
+            sidebar.scrollTop
+        );
+    });
+
+});
+</script>

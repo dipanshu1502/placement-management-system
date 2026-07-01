@@ -144,18 +144,38 @@ $currentUrl = current_url();
         📝 Applications
     </a>
 
-    <a href="<?= base_url('admin/resumes') ?>"
-        class="<?= strpos($currentUrl,'admin/resumes') !== false ? 'active' : '' ?>">
-        📄 Resume Management
-    </a>
-
     <a href="<?= base_url('logout') ?>">
         🚪 Logout
     </a>
 
 </div>
 
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const sidebar = document.getElementById("adminSidebar");
+
+    if (!sidebar) return;
+
+    // Restore scroll position
+    const scrollPosition = localStorage.getItem("adminSidebarScroll");
+
+    if (scrollPosition !== null) {
+        sidebar.scrollTop = scrollPosition;
+    }
+
+    // Save scroll position
+    sidebar.addEventListener("scroll", function () {
+        localStorage.setItem(
+            "adminSidebarScroll",
+            sidebar.scrollTop
+        );
+    });
+
+});
+</script>
 
 </body>
 </html>
