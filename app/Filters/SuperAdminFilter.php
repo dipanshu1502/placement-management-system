@@ -6,21 +6,26 @@ use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\Filters\FilterInterface;
 
-class AdminFilter implements FilterInterface
+class SuperAdminFilter implements FilterInterface
 {
     public function before(
         RequestInterface $request,
         $arguments = null
     ) {
+        // User logged in?
         if (!session()->get('logged_in')) {
             return redirect()->to('/login');
         }
 
-        $role = session()->get('role');
+        // Only Super Admin allowed
+        if (session()->get('role') !== 'super_admin') {
 
-        // Admin aur Super Admin dono allowed
-        if (!in_array($role, ['admin', 'super_admin'])) {
-            return redirect()->to('/login');
+            return redirect()
+                ->to('/login')
+                ->with(
+                    'error',
+                    'Access denied.'
+                );
         }
     }
 
@@ -29,5 +34,6 @@ class AdminFilter implements FilterInterface
         ResponseInterface $response,
         $arguments = null
     ) {
+        //
     }
 }

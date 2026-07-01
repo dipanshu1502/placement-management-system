@@ -52,17 +52,30 @@ class Department extends BaseController
         ];
 
         if (!$this->validate($rules)) {
+
             return redirect()->back()
                 ->withInput()
                 ->with('errors', $this->validator->getErrors());
         }
 
+        $departmentName = $this->request->getPost('department_name');
+
         $this->departmentModel->save([
-            'department_name' => $this->request->getPost('department_name'),
+
+            'department_name' => $departmentName,
+
             'department_code' => strtoupper(
                 $this->request->getPost('department_code')
             )
+
         ]);
+
+        // Activity Log
+        $this->logActivity(
+            'Created',
+            'Department',
+            'Added Department "' . $departmentName . '"'
+        );
 
         return redirect()->to('/admin/departments')
             ->with('success', 'Department Added Successfully');
@@ -74,6 +87,7 @@ class Department extends BaseController
         $department = $this->departmentModel->find($id);
 
         if (!$department) {
+
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
 
@@ -88,26 +102,43 @@ class Department extends BaseController
         $department = $this->departmentModel->find($id);
 
         if (!$department) {
+
             return redirect()->to('/admin/departments');
         }
 
         $rules = [
+
             'department_name' => 'required|min_length[2]|max_length[100]',
+
             'department_code' => 'required|min_length[2]|max_length[20]'
+
         ];
 
         if (!$this->validate($rules)) {
+
             return redirect()->back()
                 ->withInput()
                 ->with('errors', $this->validator->getErrors());
         }
 
+        $departmentName = $this->request->getPost('department_name');
+
         $this->departmentModel->update($id, [
-            'department_name' => $this->request->getPost('department_name'),
+
+            'department_name' => $departmentName,
+
             'department_code' => strtoupper(
                 $this->request->getPost('department_code')
             )
+
         ]);
+
+        // Activity Log
+        $this->logActivity(
+            'Updated',
+            'Department',
+            'Updated Department "' . $departmentName . '"'
+        );
 
         return redirect()->to('/admin/departments')
             ->with('success', 'Department Updated Successfully');
@@ -119,6 +150,14 @@ class Department extends BaseController
         $department = $this->departmentModel->find($id);
 
         if ($department) {
+
+            // Activity Log
+            $this->logActivity(
+                'Deleted',
+                'Department',
+                'Deleted Department "' . $department['department_name'] . '"'
+            );
+
             $this->departmentModel->delete($id);
         }
 

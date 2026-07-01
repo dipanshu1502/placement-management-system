@@ -55,6 +55,17 @@ class PlacementDrive extends BaseController
         // Company Details
         $company = $this->companyModel->find($companyId);
 
+        // Activity Log
+        $this->logActivity(
+            'Created',
+            'Placement Drive',
+            'Created placement drive "' .
+            $company['company_name'] .
+            ' - ' .
+            $jobRole .
+            '"'
+        );
+
         // Models
         $studentModel = new StudentModel();
         $notificationModel = new NotificationModel();
@@ -82,23 +93,22 @@ class PlacementDrive extends BaseController
                 'Placement Drive Created Successfully'
             );
     }
-
-    public function exportApplicants($driveId)
+        public function exportApplicants($driveId)
     {
         $applications = (new \App\Models\ApplicationModel())
             ->select('
-    users.name,
-    users.email,
-    students.roll_no,
-    students.phone,
-    students.cgpa,
-    students.passing_year,
-    departments.department_name,
-    applications.status,
-    placement_drives.job_role,
-    companies.company_name,
-    resumes.resume_file
-')
+                users.name,
+                users.email,
+                students.roll_no,
+                students.phone,
+                students.cgpa,
+                students.passing_year,
+                departments.department_name,
+                applications.status,
+                placement_drives.job_role,
+                companies.company_name,
+                resumes.resume_file
+            ')
             ->join('students', 'students.id = applications.student_id')
             ->join('users', 'users.id = students.user_id')
             ->join('departments', 'departments.id = students.department_id', 'left')
@@ -174,6 +184,26 @@ class PlacementDrive extends BaseController
 
     public function delete($id)
     {
+        $drive = $this->driveModel
+            ->select('placement_drives.*, companies.company_name')
+            ->join('companies', 'companies.id = placement_drives.company_id')
+            ->where('placement_drives.id', $id)
+            ->first();
+
+        if ($drive) {
+
+            // Activity Log
+            $this->logActivity(
+                'Deleted',
+                'Placement Drive',
+                'Deleted placement drive "' .
+                $drive['company_name'] .
+                ' - ' .
+                $drive['job_role'] .
+                '"'
+            );
+        }
+
         $this->driveModel->delete($id);
 
         return redirect()

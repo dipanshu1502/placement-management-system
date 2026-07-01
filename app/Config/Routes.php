@@ -25,6 +25,30 @@ $routes->post('update-password', 'Auth::updatePassword');
 
 
 // =========================
+// SUPER ADMIN ROUTES
+// =========================
+
+$routes->group('super-admin', ['filter' => 'superadmin'], function ($routes) {
+
+    // Dashboard
+    $routes->get('dashboard', 'SuperAdmin\Dashboard::index');
+
+    // Admin Management
+    $routes->get('admins', 'SuperAdmin\Admins::index');
+    $routes->get('admins/create', 'SuperAdmin\Admins::create');
+    $routes->post('admins/store', 'SuperAdmin\Admins::store');
+    $routes->get('admins/edit/(:num)', 'SuperAdmin\Admins::edit/$1');
+    $routes->post('admins/update/(:num)', 'SuperAdmin\Admins::update/$1');
+    $routes->get('admins/toggle-status/(:num)', 'SuperAdmin\Admins::toggleStatus/$1');
+    $routes->get(
+    'activity-logs',
+    'SuperAdmin\ActivityLogs::index'
+);
+
+    
+});
+
+// =========================
 // ADMIN ROUTES
 // =========================
 
@@ -42,13 +66,13 @@ $routes->group('admin', ['filter' => 'admin'], function ($routes) {
 
     // Students
     // Students
-$routes->get('students', 'Admin\Student::index');
-$routes->get('students/view/(:num)', 'Admin\Student::view/$1');
-$routes->get('students/delete/(:num)', 'Admin\Student::delete/$1');
+    $routes->get('students', 'Admin\Student::index');
+    $routes->get('students/view/(:num)', 'Admin\Student::view/$1');
+    $routes->get('students/delete/(:num)', 'Admin\Student::delete/$1');
 
-// Removed Students
-$routes->get('removed-students', 'Admin\Student::removedStudents');
-$routes->get('restore-student/(:num)', 'Admin\Student::restoreStudent/$1');
+    // Removed Students
+    $routes->get('removed-students', 'Admin\Student::removedStudents');
+    $routes->get('restore-student/(:num)', 'Admin\Student::restoreStudent/$1');
     // Companies
     $routes->get('companies', 'Admin\Company::index');
     $routes->get('companies/create', 'Admin\Company::create');

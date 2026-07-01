@@ -1,5 +1,17 @@
-<?= $this->include('admin/layout/header') ?>
-<?= $this->include('admin/layout/sidebar') ?>
+<?= $this->include('layout/header') ?>
+<?php
+
+if(session()->get('role') == 'super_admin'){
+
+    echo view('super_admin/layout/sidebar');
+
+}else{
+
+    echo view('admin/layout/sidebar');
+
+}
+
+?>
 
 <div class="main">
 
@@ -115,4 +127,4 @@
 
 </div>
 
-<?= $this->include('admin/layout/footer') ?>
+<?= $this->include('layout/footer') ?>

@@ -30,12 +30,21 @@ class Company extends BaseController
 
     public function store()
     {
+        $companyName = $this->request->getPost('company_name');
+
         $this->companyModel->save([
-            'company_name' => $this->request->getPost('company_name'),
+            'company_name' => $companyName,
             'website'      => $this->request->getPost('website'),
             'package'      => $this->request->getPost('package'),
             'location'     => $this->request->getPost('location')
         ]);
+
+        // Activity Log
+        $this->logActivity(
+            'Created',
+            'Company',
+            'Added company "' . $companyName . '"'
+        );
 
         return redirect()
             ->to('/admin/companies')
@@ -51,12 +60,21 @@ class Company extends BaseController
 
     public function update($id)
     {
+        $companyName = $this->request->getPost('company_name');
+
         $this->companyModel->update($id, [
-            'company_name' => $this->request->getPost('company_name'),
+            'company_name' => $companyName,
             'website'      => $this->request->getPost('website'),
             'package'      => $this->request->getPost('package'),
             'location'     => $this->request->getPost('location')
         ]);
+
+        // Activity Log
+        $this->logActivity(
+            'Updated',
+            'Company',
+            'Updated company "' . $companyName . '"'
+        );
 
         return redirect()
             ->to('/admin/companies')
@@ -65,6 +83,18 @@ class Company extends BaseController
 
     public function delete($id)
     {
+        $company = $this->companyModel->find($id);
+
+        if ($company) {
+
+            // Activity Log
+            $this->logActivity(
+                'Deleted',
+                'Company',
+                'Deleted company "' . $company['company_name'] . '"'
+            );
+        }
+
         $this->companyModel->delete($id);
 
         return redirect()

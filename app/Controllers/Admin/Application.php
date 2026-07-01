@@ -18,8 +18,8 @@ class Application extends BaseController
 
     public function index()
     {
-        $status      = $this->request->getGet('status');
-        $companyId   = $this->request->getGet('company');
+        $status = $this->request->getGet('status');
+        $companyId = $this->request->getGet('company');
         $studentName = $this->request->getGet('student_name');
 
         $companyModel = new CompanyModel();
@@ -90,8 +90,7 @@ class Application extends BaseController
             ]
         );
     }
-
-    public function updateStatus($id)
+        public function updateStatus($id)
     {
         $status = $this->request->getPost('status');
 
@@ -102,9 +101,18 @@ class Application extends BaseController
         $application = $this->applicationModel
             ->select('
                 applications.*,
+                users.name,
                 placement_drives.job_role,
                 companies.company_name
             ')
+            ->join(
+                'students',
+                'students.id = applications.student_id'
+            )
+            ->join(
+                'users',
+                'users.id = students.user_id'
+            )
             ->join(
                 'placement_drives',
                 'placement_drives.id = applications.drive_id'
@@ -132,6 +140,19 @@ class Application extends BaseController
                     'is_read'    => 0
                 ]);
 
+                // Activity Log
+                $this->logActivity(
+                    'Selected',
+                    'Application',
+                    'Selected "' .
+                    $application['name'] .
+                    '" for "' .
+                    $application['company_name'] .
+                    ' - ' .
+                    $application['job_role'] .
+                    '"'
+                );
+
             } elseif ($status == 'Rejected') {
 
                 $notificationModel->insert([
@@ -144,6 +165,19 @@ class Application extends BaseController
                         ' has been rejected.',
                     'is_read'    => 0
                 ]);
+
+                // Activity Log
+                $this->logActivity(
+                    'Rejected',
+                    'Application',
+                    'Rejected "' .
+                    $application['name'] .
+                    '" for "' .
+                    $application['company_name'] .
+                    ' - ' .
+                    $application['job_role'] .
+                    '"'
+                );
             }
         }
 

@@ -3,7 +3,6 @@
 namespace App\Controllers;
 
 use App\Models\UserModel;
-
 use App\Models\PasswordResetModel;
 
 class Auth extends BaseController
@@ -32,7 +31,6 @@ class Auth extends BaseController
             ->first();
 
         if ($existingUser) {
-
             return redirect()
                 ->back()
                 ->withInput()
@@ -43,10 +41,7 @@ class Auth extends BaseController
         $userData = [
             'name'     => $name,
             'email'    => $email,
-            'password' => password_hash(
-                $password,
-                PASSWORD_DEFAULT
-            ),
+            'password' => password_hash($password, PASSWORD_DEFAULT),
             'role'     => 'student',
             'status'   => 'active'
         ];
@@ -59,7 +54,9 @@ class Auth extends BaseController
         session()->set([
             'id'        => $userId,
             'name'      => $name,
+            'email'     => $email,
             'role'      => 'student',
+            'status'    => 'active',
             'logged_in' => true
         ]);
 
@@ -67,52 +64,71 @@ class Auth extends BaseController
     }
 
     public function checkLogin()
-{
-    $userModel = new UserModel();
+    {
+        $userModel = new UserModel();
 
-    $email = trim($this->request->getPost('email'));
-    $password = $this->request->getPost('password');
+        $email = trim($this->request->getPost('email'));
+        $password = $this->request->getPost('password');
 
-    $user = $userModel
-        ->where('email', $email)
-        ->first();
+        $user = $userModel
+            ->where('email', $email)
+            ->first();
 
-    if ($user && password_verify($password, $user['password'])) {
+        if ($user && password_verify($password, $user['password'])) {
 
-        // Block Removed Student
-        if (
-            $user['role'] === 'student' &&
-            isset($user['status']) &&
-            $user['status'] === 'inactive'
-        ) {
-            return redirect()
-                ->back()
-                ->withInput()
-                ->with(
-                    'error',
-                    'Your account has been removed by the administrator. Please contact the administrator.'
-                );
+            // Block inactive users
+            if (
+                isset($user['status']) &&
+                $user['status'] !== 'active'
+            ) {
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->with(
+                        'error',
+                        'Your account is inactive. Please contact the administrator.'
+                    );
+            }
+
+            // Create Session
+            session()->set([
+                'id'        => $user['id'],
+                'name'      => $user['name'],
+                'email'     => $user['email'],
+                'role'      => $user['role'],
+                'status'    => $user['status'],
+                'logged_in' => true
+            ]);
+
+            switch ($user['role']) {
+
+                case 'student':
+                    return redirect()->to('/student/dashboard');
+
+                case 'admin':
+                    return redirect()->to('/admin/dashboard');
+
+                case 'super_admin':
+                    return redirect()->to('/super-admin/dashboard');
+
+                default:
+
+                    session()->destroy();
+
+                    return redirect()
+                        ->to('/login')
+                        ->with(
+                            'error',
+                            'Invalid user role.'
+                        );
+            }
         }
 
-        session()->set([
-            'id'        => $user['id'],
-            'name'      => $user['name'],
-            'role'      => $user['role'],
-            'logged_in' => true
-        ]);
-
-        if ($user['role'] == 'admin') {
-            return redirect()->to('/admin/dashboard');
-        }
-
-        return redirect()->to('/student/dashboard');
+        return redirect()
+            ->back()
+            ->withInput()
+            ->with('error', 'Invalid email or password.');
     }
-
-    return redirect()
-        ->back()
-        ->withInput()
-        ->with('error', 'Invalid email or password.');
-}
 
     public function forgotPassword()
     {
@@ -130,7 +146,6 @@ class Auth extends BaseController
             ->first();
 
         if (!$user) {
-
             return redirect()
                 ->back()
                 ->with(
@@ -155,8 +170,6 @@ class Auth extends BaseController
 
         $resetLink = base_url('reset-password/' . $token);
 
-        $resetLink = base_url('reset-password/' . $token);
-
         session()->setFlashdata('reset_link', $resetLink);
 
         return redirect()
@@ -176,7 +189,6 @@ class Auth extends BaseController
             ->first();
 
         if (!$resetRequest) {
-
             return redirect()
                 ->to('/forgot-password')
                 ->with(
@@ -205,7 +217,6 @@ class Auth extends BaseController
             ->first();
 
         if (!$resetRequest) {
-
             return redirect()
                 ->to('/forgot-password')
                 ->with(
@@ -239,7 +250,6 @@ class Auth extends BaseController
                 'Password updated successfully. Please login.'
             );
     }
-
 
     public function logout()
     {

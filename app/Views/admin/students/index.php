@@ -1,5 +1,17 @@
-<?= $this->include('admin/layout/header') ?>
-<?= $this->include('admin/layout/sidebar') ?>
+<?= $this->include('layout/header') ?>
+<?php
+
+if(session()->get('role') == 'super_admin'){
+
+    echo view('super_admin/layout/sidebar');
+
+}else{
+
+    echo view('admin/layout/sidebar');
+
+}
+
+?>
 
 <div class="main">
 
@@ -14,19 +26,19 @@
 
     <br>
 
-    <?php if (session()->getFlashdata('success')) : ?>
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <?= session()->getFlashdata('success') ?>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-<?php endif; ?>
+    <?php if (session()->getFlashdata('success')): ?>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <?= session()->getFlashdata('success') ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <?php endif; ?>
 
-<?php if (session()->getFlashdata('error')) : ?>
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <?= session()->getFlashdata('error') ?>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-<?php endif; ?>
+    <?php if (session()->getFlashdata('error')): ?>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <?= session()->getFlashdata('error') ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <?php endif; ?>
 
     <div class="card shadow">
 
@@ -35,29 +47,22 @@
             <form method="get" class="row g-2 mb-3">
 
                 <div class="col-md-4">
-                    <input
-                        type="text"
-                        name="search"
-                        class="form-control"
-                        placeholder="Search Student Name..."
+                    <input type="text" name="search" class="form-control" placeholder="Search Student Name..."
                         value="<?= esc($search ?? '') ?>">
                 </div>
 
                 <div class="col-md-3">
                     <select name="status" class="form-select">
 
-                        <option value="all"
-                            <?= ($status == 'all') ? 'selected' : '' ?>>
+                        <option value="all" <?= ($status == 'all') ? 'selected' : '' ?>>
                             All Students
                         </option>
 
-                        <option value="complete"
-                            <?= ($status == 'complete') ? 'selected' : '' ?>>
+                        <option value="complete" <?= ($status == 'complete') ? 'selected' : '' ?>>
                             Complete Profile
                         </option>
 
-                        <option value="incomplete"
-                            <?= ($status == 'incomplete') ? 'selected' : '' ?>>
+                        <option value="incomplete" <?= ($status == 'incomplete') ? 'selected' : '' ?>>
                             Incomplete Profile
                         </option>
 
@@ -71,8 +76,7 @@
                 </div>
 
                 <div class="col-md-2">
-                    <a href="<?= base_url('admin/students') ?>"
-                        class="btn btn-secondary w-100">
+                    <a href="<?= base_url('admin/students') ?>" class="btn btn-secondary w-100">
                         Reset
                     </a>
                 </div>
@@ -99,9 +103,9 @@
 
                     <tbody>
 
-                        <?php if (!empty($students)) : ?>
+                        <?php if (!empty($students)): ?>
 
-                            <?php foreach ($students as $student) : ?>
+                            <?php foreach ($students as $student): ?>
 
                                 <?php $isComplete = !empty($student['student_id']); ?>
 
@@ -131,13 +135,13 @@
 
                                     <td>
 
-                                        <?php if ($isComplete) : ?>
+                                        <?php if ($isComplete): ?>
 
                                             <span class="badge bg-success">
                                                 Complete
                                             </span>
 
-                                        <?php else : ?>
+                                        <?php else: ?>
 
                                             <span class="badge bg-warning text-dark">
                                                 Incomplete
@@ -149,7 +153,7 @@
 
                                     <td>
 
-                                        <?php if ($isComplete) : ?>
+                                        <?php if ($isComplete): ?>
 
                                             <a href="<?= base_url('admin/students/view/' . $student['student_id']) ?>"
                                                 class="btn btn-info btn-sm mb-1">
@@ -170,7 +174,7 @@
 
                             <?php endforeach; ?>
 
-                        <?php else : ?>
+                        <?php else: ?>
 
                             <tr>
                                 <td colspan="9" class="text-center">
@@ -192,4 +196,4 @@
 
 </div>
 
-<?= $this->include('admin/layout/footer') ?>
+<?= $this->include('layout/footer') ?>

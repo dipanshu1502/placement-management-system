@@ -1,22 +1,59 @@
 <?php
 
+if (session()->get('role') == 'super_admin') {
+    echo view('super_admin/layout/sidebar');
+    return;
+}
+
 $currentUrl = current_url();
 
 ?>
 
 <style>
     .sidebar {
-        width: 260px;
-        min-height: 100vh;
-        background: linear-gradient(180deg, #111827, #2563eb);
-        position: fixed;
-        left: 0;
-        top: 0;
-        padding: 25px 0;
-        box-shadow: 0 0 25px rgba(0, 0, 0, .20);
-        z-index: 999;
-        transition: all .3s ease;
-    }
+    width: 260px;
+    height: 100vh;
+    background: linear-gradient(180deg, #111827, #2563eb);
+    position: fixed;
+    left: 0;
+    top: 0;
+    padding: 25px 0;
+    box-shadow: 0 0 25px rgba(0, 0, 0, .20);
+    z-index: 999;
+    transition: all .3s ease;
+
+    /* Scroll */
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* =========================
+   Sidebar Scrollbar
+========================= */
+
+.sidebar::-webkit-scrollbar {
+    width: 8px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: rgba(255,255,255,.08);
+    border-radius: 10px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,.35);
+    border-radius: 10px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255,255,255,.6);
+}
+
+/* Firefox */
+.sidebar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,.4) transparent;
+}
 
     .sidebar-title {
         color: #fff;
@@ -40,29 +77,31 @@ $currentUrl = current_url();
     }
 
     .sidebar a:hover {
-        background: rgba(255, 255, 255, 0.15);
+        background: rgba(255,255,255,.15);
         transform: translateX(5px);
     }
 
     .sidebar a.active {
-        background: rgba(255, 255, 255, 0.20);
+        background: rgba(255,255,255,.20);
         border-left: 4px solid #fff;
     }
+    
 
-    @media (max-width: 768px) {
+    @media (max-width:768px){
 
-        .sidebar {
-            left: -280px;
-            width: 260px;
+        .sidebar{
+            left:-280px;
+            width:260px;
         }
 
-        .sidebar.show {
-            left: 0;
+        .sidebar.show{
+            left:0;
         }
 
-        .sidebar-title {
-            font-size: 22px;
+        .sidebar-title{
+            font-size:22px;
         }
+
     }
 </style>
 
@@ -71,38 +110,43 @@ $currentUrl = current_url();
     <h3 class="sidebar-title">🛠 PMS Admin</h3>
 
     <a href="<?= base_url('admin/dashboard') ?>"
-        class="<?= strpos($currentUrl, 'admin/dashboard') !== false ? 'active' : '' ?>">
+        class="<?= strpos($currentUrl,'admin/dashboard') !== false ? 'active' : '' ?>">
         📊 Dashboard
     </a>
 
     <a href="<?= base_url('admin/departments') ?>"
-        class="<?= strpos($currentUrl, 'admin/departments') !== false ? 'active' : '' ?>">
+        class="<?= strpos($currentUrl,'admin/departments') !== false ? 'active' : '' ?>">
         🏢 Departments
     </a>
 
     <a href="<?= base_url('admin/students') ?>"
-        class="<?= (strpos($currentUrl, 'admin/students') !== false && strpos($currentUrl, 'admin/removed-students') === false) ? 'active' : '' ?>">
+        class="<?= (strpos($currentUrl,'admin/students') !== false && strpos($currentUrl,'admin/removed-students') === false) ? 'active' : '' ?>">
         👨‍🎓 Students
     </a>
 
     <a href="<?= base_url('admin/removed-students') ?>"
-        class="<?= strpos($currentUrl, 'admin/removed-students') !== false ? 'active' : '' ?>">
+        class="<?= strpos($currentUrl,'admin/removed-students') !== false ? 'active' : '' ?>">
         🗑️ Removed Students
     </a>
 
     <a href="<?= base_url('admin/companies') ?>"
-        class="<?= strpos($currentUrl, 'admin/companies') !== false ? 'active' : '' ?>">
+        class="<?= strpos($currentUrl,'admin/companies') !== false ? 'active' : '' ?>">
         💼 Companies
     </a>
 
     <a href="<?= base_url('admin/drives') ?>"
-        class="<?= strpos($currentUrl, 'admin/drives') !== false ? 'active' : '' ?>">
+        class="<?= strpos($currentUrl,'admin/drives') !== false ? 'active' : '' ?>">
         🚀 Placement Drives
     </a>
 
     <a href="<?= base_url('admin/applications') ?>"
-        class="<?= strpos($currentUrl, 'admin/applications') !== false ? 'active' : '' ?>">
+        class="<?= strpos($currentUrl,'admin/applications') !== false ? 'active' : '' ?>">
         📝 Applications
+    </a>
+
+    <a href="<?= base_url('admin/resumes') ?>"
+        class="<?= strpos($currentUrl,'admin/resumes') !== false ? 'active' : '' ?>">
+        📄 Resume Management
     </a>
 
     <a href="<?= base_url('logout') ?>">
@@ -110,3 +154,8 @@ $currentUrl = current_url();
     </a>
 
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

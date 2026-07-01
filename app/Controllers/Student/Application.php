@@ -75,7 +75,7 @@ class Application extends BaseController
         return view(
             'student/applications/index',
             [
-                'applications'  => $applications,
+                'applications' => $applications,
                 'currentStatus' => $status
             ]
         );

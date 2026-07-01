@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 24, 2026 at 06:47 AM
+-- Generation Time: Jul 01, 2026 at 12:49 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,6 +20,34 @@ SET time_zone = "+00:00";
 --
 -- Database: `placement_management_system`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `activity_logs`
+--
+
+CREATE TABLE `activity_logs` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `action` varchar(50) NOT NULL,
+  `module` varchar(100) NOT NULL,
+  `description` text NOT NULL,
+  `ip_address` varchar(50) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `activity_logs`
+--
+
+INSERT INTO `activity_logs` (`id`, `user_id`, `action`, `module`, `description`, `ip_address`, `created_at`) VALUES
+(1, 3, 'Created', 'Company', 'Added company \"wqlm\"', '127.0.0.1', '2026-07-01 09:24:39'),
+(2, 3, 'Created', 'Department', 'Added Department \"physics\"', '127.0.0.1', '2026-07-01 09:27:32'),
+(3, 12, 'Deleted', 'Department', 'Deleted Department \"physics\"', '127.0.0.1', '2026-07-01 09:57:11'),
+(4, 12, 'Removed', 'Student', 'Removed student \"Deepa\"', '127.0.0.1', '2026-07-01 09:57:19'),
+(5, 12, 'Restored', 'Student', 'Restored student \"Deepa\"', '127.0.0.1', '2026-07-01 09:57:26'),
+(6, 12, 'Deleted', 'Company', 'Deleted company \"wqlm\"', '127.0.0.1', '2026-07-01 09:57:30');
 
 -- --------------------------------------------------------
 
@@ -170,6 +198,41 @@ INSERT INTO `placement_drives` (`id`, `company_id`, `job_role`, `min_cgpa`, `pac
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `removed_students`
+--
+
+CREATE TABLE `removed_students` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `removed_by` int(11) NOT NULL,
+  `removed_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `restore_at` timestamp NULL DEFAULT NULL,
+  `status` enum('removed','restored') DEFAULT 'removed',
+  `reason` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `removed_students`
+--
+
+INSERT INTO `removed_students` (`id`, `user_id`, `removed_by`, `removed_at`, `restore_at`, `status`, `reason`) VALUES
+(1, 7, 3, '2026-06-25 04:20:49', '2026-06-24 23:05:33', 'restored', NULL),
+(2, 7, 3, '2026-06-25 04:35:40', '2026-06-25 01:22:05', 'restored', NULL),
+(3, 1, 3, '2026-06-25 04:40:36', '2026-06-24 23:11:27', 'restored', NULL),
+(4, 1, 3, '2026-06-25 04:43:25', '2026-06-24 23:13:54', 'restored', NULL),
+(5, 1, 3, '2026-06-25 04:49:06', '2026-06-24 23:19:16', 'restored', NULL),
+(6, 7, 3, '2026-06-25 06:52:16', '2026-06-25 01:22:33', 'restored', NULL),
+(7, 7, 3, '2026-06-25 06:52:44', '2026-06-25 01:22:54', 'restored', NULL),
+(8, 7, 3, '2026-06-25 07:22:28', '2026-06-25 03:10:40', 'restored', NULL),
+(9, 7, 3, '2026-06-25 08:40:45', '2026-06-25 04:21:13', 'restored', NULL),
+(10, 7, 3, '2026-06-25 09:51:52', '2026-06-25 04:21:57', 'restored', NULL),
+(11, 7, 3, '2026-06-25 09:54:14', '2026-06-25 04:24:27', 'restored', NULL),
+(12, 7, 12, '2026-07-01 09:04:18', '2026-07-01 03:34:25', 'restored', NULL),
+(13, 7, 12, '2026-07-01 09:57:19', '2026-07-01 04:27:26', 'restored', NULL);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `resumes`
 --
 
@@ -185,7 +248,7 @@ CREATE TABLE `resumes` (
 --
 
 INSERT INTO `resumes` (`id`, `student_id`, `resume_file`, `uploaded_at`) VALUES
-(1, 1, '1782107182_1782107182_fafc54deb8f0fdedc129.pdf', '2026-06-10 08:53:50');
+(1, 1, '1782379476_1782379476_f2a0bb9d35cfb9daa0c8.pdf', '2026-06-10 08:53:50');
 
 -- --------------------------------------------------------
 
@@ -210,7 +273,7 @@ CREATE TABLE `students` (
 --
 
 INSERT INTO `students` (`id`, `user_id`, `department_id`, `roll_no`, `phone`, `cgpa`, `backlogs`, `passing_year`, `created_at`) VALUES
-(1, 1, 1, '237106008', NULL, NULL, NULL, NULL, '2026-06-10 06:13:16'),
+(1, 1, 1, '237106008', '9756938892', 9.00, 0, '2027', '2026-06-10 06:13:16'),
 (4, 11, 1, '237106021', '8968391105', 0.00, 0, '2027', '2026-06-12 18:27:29'),
 (5, 10, 1, '237106020', '9518137105', 8.95, 0, '2027', '2026-06-12 18:28:36');
 
@@ -225,24 +288,34 @@ CREATE TABLE `users` (
   `name` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `role` enum('admin','student') NOT NULL DEFAULT 'student',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `role` enum('student','admin','super_admin') NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `status` enum('active','inactive') NOT NULL DEFAULT 'active'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`, `created_at`) VALUES
-(1, 'Dipanshu', 'dipanshu150206@gmail.com', '$2y$10$B5ZKBq5lUBysGySu6/wQpOFuydvZ..ud1KU7gphhgD3SLkUnQ7CzC', 'student', '2026-06-10 04:24:35'),
-(3, 'Admin', 'admin@gmail.com', '$2y$10$PJVM/FCVpb34LZbDWMXh..qxnpaf1UBD.PoCBY8CxHRBW.e4AfrMa', 'admin', '2026-06-10 04:39:42'),
-(7, 'Deepa', 'deepansh305@gmail.com', '$2y$10$fpLLNt6psjKFH5Q2ZjewXO8N8u6XYe2IDh1RNjz8kMAp5gGANjvl6', 'student', '2026-06-11 08:50:34'),
-(10, 'Jasdeep kaur', 'jasdeepj004@gmail.com', '$2y$10$oIPSYcXt83kwpxQ0pCewau8VCQXSTz2OJVML5DGafUP5nM8cOLFIW', 'student', '2026-06-12 18:21:52'),
-(11, 'Jashandeep Kaur', 'jashancheema644@gmail.com', '$2y$10$a/OdVepUMKAiopVffddP9udfHK5e5cwkgB5P7ZB6lHn.NshFB3k1S', 'student', '2026-06-12 18:24:31');
+INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`, `created_at`, `status`) VALUES
+(1, 'Dipanshu', 'dipanshu150206@gmail.com', '$2y$10$B5ZKBq5lUBysGySu6/wQpOFuydvZ..ud1KU7gphhgD3SLkUnQ7CzC', 'student', '2026-06-10 04:24:35', 'active'),
+(3, 'Admin', 'admin@gmail.com', '$2y$10$PJVM/FCVpb34LZbDWMXh..qxnpaf1UBD.PoCBY8CxHRBW.e4AfrMa', 'admin', '2026-06-10 04:39:42', 'active'),
+(7, 'Deepa', 'deepansh305@gmail.com', '$2y$10$fpLLNt6psjKFH5Q2ZjewXO8N8u6XYe2IDh1RNjz8kMAp5gGANjvl6', 'student', '2026-06-11 08:50:34', 'active'),
+(10, 'Jasdeep kaur', 'jasdeepj004@gmail.com', '$2y$10$oIPSYcXt83kwpxQ0pCewau8VCQXSTz2OJVML5DGafUP5nM8cOLFIW', 'student', '2026-06-12 18:21:52', 'active'),
+(11, 'Jashandeep Kaur', 'jashancheema644@gmail.com', '$2y$10$a/OdVepUMKAiopVffddP9udfHK5e5cwkgB5P7ZB6lHn.NshFB3k1S', 'student', '2026-06-12 18:24:31', 'active'),
+(12, 'Super Admin', 'superadmin@gmail.com', '$2y$10$znrz48s8P/3vfqgRYIaAB.8sUJ6yR1XwgNrqoR49ksHnoo0rd0SVC', 'super_admin', '2026-07-01 04:17:11', 'active'),
+(13, 'Admin1', 'admin1@gmail.com', '$2y$10$6ZBH2rrK9JKR9H5enK8fkukwwBuJ9RqUkj9pAE8crnzIC6AKH/xj2', 'admin', '2026-07-01 06:33:55', 'active');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `activity_logs`
+--
+ALTER TABLE `activity_logs`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `applications`
@@ -285,6 +358,14 @@ ALTER TABLE `placement_drives`
   ADD KEY `company_id` (`company_id`);
 
 --
+-- Indexes for table `removed_students`
+--
+ALTER TABLE `removed_students`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `removed_by` (`removed_by`);
+
+--
 -- Indexes for table `resumes`
 --
 ALTER TABLE `resumes`
@@ -312,6 +393,12 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `activity_logs`
+--
+ALTER TABLE `activity_logs`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
 -- AUTO_INCREMENT for table `applications`
 --
 ALTER TABLE `applications`
@@ -321,13 +408,13 @@ ALTER TABLE `applications`
 -- AUTO_INCREMENT for table `companies`
 --
 ALTER TABLE `companies`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `departments`
 --
 ALTER TABLE `departments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `notifications`
@@ -339,13 +426,19 @@ ALTER TABLE `notifications`
 -- AUTO_INCREMENT for table `password_resets`
 --
 ALTER TABLE `password_resets`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `placement_drives`
 --
 ALTER TABLE `placement_drives`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `removed_students`
+--
+ALTER TABLE `removed_students`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `resumes`
@@ -363,11 +456,17 @@ ALTER TABLE `students`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `activity_logs`
+--
+ALTER TABLE `activity_logs`
+  ADD CONSTRAINT `activity_logs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
 -- Constraints for table `applications`
@@ -381,6 +480,13 @@ ALTER TABLE `applications`
 --
 ALTER TABLE `placement_drives`
   ADD CONSTRAINT `placement_drives_ibfk_1` FOREIGN KEY (`company_id`) REFERENCES `companies` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `removed_students`
+--
+ALTER TABLE `removed_students`
+  ADD CONSTRAINT `removed_students_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `removed_students_ibfk_2` FOREIGN KEY (`removed_by`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `resumes`
